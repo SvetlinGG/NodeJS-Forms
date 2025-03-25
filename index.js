@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
                 <title>Work with Forms</title>
             </head>
             <body>
-                <form action="/" method="POST" enctype="multipart/form-data">
+                <form action="/upload" method="POST" enctype="multipart/form-data">
                     <div>
                         <label for="username">Username</label>
                         <input type="text" name="username" id="username" />
@@ -29,6 +29,11 @@ const server = http.createServer((req, res) => {
                     </div>
 
                     <div>
+                        <label for="file">Avatar</label>
+                        <input type="file" name="avatar" id="avatar" />
+                    </div>
+
+                    <div>
                         <input type="submit" value="Register" />
                     </div>
                 </form>
@@ -36,6 +41,7 @@ const server = http.createServer((req, res) => {
             </html>
             `)
         res.end();
+        // Simple form
     }else if(req.url === '/'  && req.method === 'POST'){
 
         let body = '';
@@ -48,13 +54,35 @@ const server = http.createServer((req, res) => {
 
         req.on('close', () => {
             
-            //const data = querystring.parse(body);
+            const data = querystring.parse(body);
 
-            console.log(data);
+            console.log(body);
             res.end(); 
         });
       
-    };
+    }else if(req.url === '/upload'  && req.method === 'POST'){
+
+        const body = [];
+        req.on('data', chunk => {
+            body.push(chunk);
+        });
+
+        req.on('close', () => {
+            const dataBuffer = Buffer.concat(body)
+
+            const data = dataBuffer.toString('binary');
+
+            console.log(data);
+            
+
+            res.writeHead(301, {
+                'location': '/'
+            });
+            res.end();
+
+        });
+
+    }
 
     
 });
