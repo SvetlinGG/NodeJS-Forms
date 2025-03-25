@@ -1,4 +1,5 @@
 const http = require('http');
+const querystring = require('querystring');
 
 const server = http.createServer((req, res) => {
     if (req.url === '/'  && req.method === 'GET'){
@@ -16,7 +17,7 @@ const server = http.createServer((req, res) => {
                 <title>Work with Forms</title>
             </head>
             <body>
-                <form action="">
+                <form action="/" method="POST" enctype="multipart/form-data">
                     <div>
                         <label for="username">Username</label>
                         <input type="text" name="username" id="username" />
@@ -35,7 +36,25 @@ const server = http.createServer((req, res) => {
             </html>
             `)
         res.end();
-    }
+    }else if(req.url === '/'  && req.method === 'POST'){
+
+        let body = '';
+
+        req.on('data', chunk => {
+            console.log(chunk);
+            body += chunk;
+            
+        });
+
+        req.on('close', () => {
+            
+            //const data = querystring.parse(body);
+
+            console.log(data);
+            res.end(); 
+        });
+      
+    };
 
     
 });
