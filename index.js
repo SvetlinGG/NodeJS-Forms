@@ -1,5 +1,8 @@
 const http = require('http');
 const querystring = require('querystring');
+const path = require('path');
+const fs = require('fs');
+const { EOL } = require('os');
 
 const server = http.createServer((req, res) => {
     if (req.url === '/'  && req.method === 'GET'){
@@ -47,7 +50,7 @@ const server = http.createServer((req, res) => {
         let body = '';
 
         req.on('data', chunk => {
-            console.log(chunk);
+            //console.log(chunk);
             body += chunk;
             
         });
@@ -71,20 +74,25 @@ const server = http.createServer((req, res) => {
             const dataBuffer = Buffer.concat(body)
 
             const data = dataBuffer.toString('binary');
+            const boundary = req.headers['content-type'].split('boundary=').at(1);
+            const parts = data.split(`--${boundary}`);
 
-            console.log(data);
-            
-
-            res.writeHead(301, {
-                'location': '/'
+            const [meta, imageData] = parts[3].split(EOL + EOL);
+            const fileName = meta.match(/filename="(.+)"/)[1];
+            const savePath = path.join(__dirname, 'upload', fileName);
+            fs.writeFile(savePath, imageData, 'binary', (err) =>{
+                if (err){
+                    return res.end();
+                }
+                console.log('Image Uploaded');
+                res.writeHead(302, {
+                    'location': '/'
+                });
+                res.end();
             });
-            res.end();
-
+            
         });
-
     }
-
-    
 });
 
 server.listen(2000);
