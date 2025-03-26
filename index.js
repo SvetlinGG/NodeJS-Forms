@@ -2,6 +2,7 @@ const http = require('http');
 const querystring = require('querystring');
 const path = require('path');
 const fs = require('fs');
+const formidable = require('formidable');
 const { EOL } = require('os');
 
 const server = http.createServer((req, res) => {
@@ -20,7 +21,7 @@ const server = http.createServer((req, res) => {
                 <title>Work with Forms</title>
             </head>
             <body>
-                <form action="/upload" method="POST" enctype="multipart/form-data">
+                <form action="/upload2" method="POST" enctype="multipart/form-data">
                     <div>
                         <label for="username">Username</label>
                         <input type="text" name="username" id="username" />
@@ -91,6 +92,17 @@ const server = http.createServer((req, res) => {
                 res.end();
             });
             
+        });
+    }else if(req.url === '/upload2'  && req.method === 'POST'){
+        const form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+
+            const savePath = path.join(__dirname, 'uploads', files['avatar'].at(0).originalFilename);
+
+            fs.copyFile(files['avatar'].at(0).filepath, savePath, (err) => {
+                console.log('Image uploaded');
+                res.end();
+            })
         });
     }
 });
