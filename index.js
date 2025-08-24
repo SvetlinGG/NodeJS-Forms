@@ -1,8 +1,13 @@
-const { log } = require('console');
+
 const http = require('http');
 
 
-const server = http.createServer();
+const server = http.createServer((req, res) => {
+    res.writeHead('Hello Node.js');
+
+
+    res.end();
+});
 
 const port = 4000;
 server.listen(console.log(`Server is listening on port: ${port}`))
