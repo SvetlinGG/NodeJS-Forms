@@ -3,14 +3,38 @@ const http = require('http');
 
 
 const server = http.createServer((req, res) => {
-    res.write(`<h1>Hello my new Node server</h1>`)
+    if ( req.url === '/' && req.method === 'GET'){
+        res.write(`
+            <body>
+                <form action="/upload2" method="POST" enctype="multipart/form-data">
+                    <div>
+                         <label for="username">Username</label>
+                         <input type="text" name="username" id="username" />
+                     </div>
 
+                     <div>
+                         <label for="password">Password</label>
+                         <input type="password" name="password" id="password" />
+                     </div>
 
-    //res.end();
+                     <div>
+                         <label for="file">Avatar</label>
+                         <input type="file" name="avatar" id="avatar" />
+                     </div>
+
+                     <div>
+                         <input type="submit" value="Register" />
+                     </div>
+                 </form>
+             </body>
+            `)
+    }
+    
+    res.end();
 });
 
 const port = 4000;
-server.listen(console.log(`Server is listening on port: ${port}`))
+server.listen(port, console.log(`Server is listening on port: ${port}`))
 
 // const http = require('http');
 // const querystring = require('querystring');
