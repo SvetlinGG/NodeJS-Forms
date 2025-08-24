@@ -4,6 +4,11 @@ const http = require('http');
 
 const server = http.createServer((req, res) => {
     if ( req.url === '/' && req.method === 'GET'){
+        res.writeHead(200, {
+            'content-type': 'text/html'
+    });
+
+
         res.write(`
             <body>
                 <form action="/upload2" method="POST" enctype="multipart/form-data">
@@ -13,7 +18,7 @@ const server = http.createServer((req, res) => {
                      </div>
 
                      <div>
-                         <label for="password">Password</label>
+                      <label for="password">Password</label>
                          <input type="password" name="password" id="password" />
                      </div>
 
@@ -27,10 +32,10 @@ const server = http.createServer((req, res) => {
                      </div>
                  </form>
              </body>
-            `)
+            `);
+            res.end();
     }
-    
-    res.end();
+
 });
 
 const port = 4000;
