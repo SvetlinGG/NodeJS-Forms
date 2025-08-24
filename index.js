@@ -1,4 +1,11 @@
+const { log } = require('console');
+const http = require('http');
 
+
+const server = http.createServer();
+
+const port = 4000;
+server.listen(console.log(`Server is listening on port: ${port}`))
 
 // const http = require('http');
 // const querystring = require('querystring');
