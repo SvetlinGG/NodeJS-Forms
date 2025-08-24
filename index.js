@@ -1,6 +1,7 @@
 const querystring = require('querystring');
 const http = require('http');
 const { buffer } = require('stream/consumers');
+const {EOL} = require('os')
 
 
 const server = http.createServer((req, res) => {
@@ -60,8 +61,14 @@ const server = http.createServer((req, res) => {
             const dataBuffer = Buffer.concat(body);
             const data = dataBuffer.toString('binary');
             const boundary = req.headers['content-type'].split('boundary=').at(1)
-            const parts = data.split(boundary);
-            console.log(parts);
+            const parts = data.split(`--${boundary}`);
+            
+            const [meta,imageData] = parts[3].split(EOL + EOL);
+            console.log(meta);
+            
+            //console.log(imageData);
+            
+            
             
         
         // res.writeHead(302, {
