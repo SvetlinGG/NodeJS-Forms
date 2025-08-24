@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
 
         res.write(`
             <body>
-                <form action="/upload2" method="POST" enctype="multipart/form-data">
+                <form action="/" method="POST">
                     <div>
                          <label for="username">Username</label>
                          <input type="text" name="username" id="username" />
@@ -34,6 +34,19 @@ const server = http.createServer((req, res) => {
              </body>
             `);
             res.end();
+
+    } else if ( req.url === '/' && req.method === 'POST'){
+        let body = '';
+        req.on('data', chunk => {
+            console.log(chunk);
+            body += chunk;
+        });
+        req.on('close', ()=> {
+            console.log(body);
+            
+            res.end();
+        })
+        
     }
 
 });
