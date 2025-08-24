@@ -1,4 +1,4 @@
-
+const querystring = require('querystring');
 const http = require('http');
 
 
@@ -42,7 +42,8 @@ const server = http.createServer((req, res) => {
             body += chunk;
         });
         req.on('close', ()=> {
-            console.log(body);
+            const data = querystring.parse(body);
+            console.log(data);
             
             res.end();
         })
