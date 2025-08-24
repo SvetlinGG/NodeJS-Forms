@@ -60,7 +60,8 @@ const server = http.createServer((req, res) => {
             const dataBuffer = Buffer.concat(body);
             const data = dataBuffer.toString('binary');
             const boundary = req.headers['content-type'].split('boundary=').at(1)
-            console.log(boundary);
+            const parts = data.split(boundary);
+            console.log(parts);
             
         
         // res.writeHead(302, {
