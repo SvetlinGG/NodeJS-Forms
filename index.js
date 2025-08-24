@@ -2,6 +2,8 @@ const querystring = require('querystring');
 const http = require('http');
 const { buffer } = require('stream/consumers');
 const {EOL} = require('os')
+const path = require('path');
+const fs = require('fs');
 
 
 const server = http.createServer((req, res) => {
@@ -64,17 +66,18 @@ const server = http.createServer((req, res) => {
             const parts = data.split(`--${boundary}`);
             
             const [meta,imageData] = parts[3].split(EOL + EOL);
-            console.log(meta);
-            
-            //console.log(imageData);
-            
-            
-            
-        
-        // res.writeHead(302, {
-        //     'location': '/'
-        // });
-        res.end();
+            const fileName = meta.match(/filename="(.+)"/)[1];
+            const savePath = path.join(__dirname, 'upload', fileName);
+            fs.writeFile(savePath, imageData, 'binary', (err)=> {
+                if (err){
+                    return res.end();
+                }
+                console.log('Image uploaded');
+                res.writeHead(302, {
+                    'location': '/'
+                });
+                res.end();
+            }); 
     });
     }
 
