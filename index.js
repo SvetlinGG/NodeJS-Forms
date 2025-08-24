@@ -3,10 +3,10 @@ const http = require('http');
 
 
 const server = http.createServer((req, res) => {
-    res.writeHead('Hello Node.js');
+    res.write(`<h1>Hello my new Node server</h1>`)
 
 
-    res.end();
+    //res.end();
 });
 
 const port = 4000;
