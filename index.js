@@ -1,5 +1,6 @@
 const querystring = require('querystring');
 const http = require('http');
+const { buffer } = require('stream/consumers');
 
 
 const server = http.createServer((req, res) => {
@@ -11,7 +12,7 @@ const server = http.createServer((req, res) => {
 
         res.write(`
             <body>
-                <form action="/" method="POST">
+                <form action="/upload" method="POST" enctype="multipart/form-data">
                     <div>
                          <label for="username">Username</label>
                          <input type="text" name="username" id="username" />
@@ -38,7 +39,7 @@ const server = http.createServer((req, res) => {
     } else if ( req.url === '/' && req.method === 'POST'){
         let body = '';
         req.on('data', chunk => {
-            console.log(chunk);
+        
             body += chunk;
         });
         req.on('close', ()=> {
@@ -48,6 +49,25 @@ const server = http.createServer((req, res) => {
             res.end();
         })
         
+    }else if ( req.url === '/upload' && req.method === 'POST'){
+        const body = [];
+
+        req.on('data', chunk => {
+            body.push(chunk);
+        });
+
+        req.on('close', ()=> {
+            const dataBuffer = Buffer.concat(body);
+            const data = dataBuffer.toString('binary');
+            const boundary = req.headers['content-type'].split('boundary=').at(1)
+            console.log(boundary);
+            
+        
+        // res.writeHead(302, {
+        //     'location': '/'
+        // });
+        res.end();
+    });
     }
 
 });
